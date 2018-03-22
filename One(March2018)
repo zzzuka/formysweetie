@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <atomic>
+#include <exception>
+#include <stdexcept>
+
+class MyClass {
+    public:
+    static std::atomic_bool lock;
+    public:
+    MyClass() {
+        if (!(lock.exchange(false))) throw std::logic_error( "one object has been created" );
+    }
+};
+
+std::atomic_bool MyClass::lock(true); //статические члены класса запрещено инициализировать в теле класса
+
+int main()
+{
+    MyClass x;
+    MyClass y;
+    return 0;
+}
