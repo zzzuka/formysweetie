@@ -17,6 +17,6 @@ std::atomic_bool MyClass::lock(true); //статические члены кла
 int main()
 {
     MyClass x;
-    MyClass y;
+    // MyClass y;
     return 0;
 }
