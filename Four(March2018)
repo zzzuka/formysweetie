@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <atomic>
+
+class Counter {
+    public:
+    static std::atomic<int> counter;
+    public:
+    Counter() {
+        counter++;
+    }
+    ~Counter() {
+        counter--;
+    }
+};
+
+class MyClass: public Counter {
+    public:
+    MyClass() : Counter() {
+        }
+    ~MyClass() {
+    }
+};
+
+std::atomic<int> Counter::counter(0);
+
+int main()
+{
+    printf("количество: %d \n",MyClass::counter.load( std::memory_order_relaxed));
+    MyClass x; // создание первого экземпляра класса
+    printf("количество: %d \n",MyClass::counter.load( std::memory_order_relaxed));
+    MyClass y; // создание второго экземпляра класса
+    printf("количество: %d \n",MyClass::counter.load( std::memory_order_relaxed));
+    x.~MyClass(); // удаление первого экземпляяра класса
+    printf("количество: %d \n",MyClass::counter.load( std::memory_order_relaxed));
+    return 0;
+}
