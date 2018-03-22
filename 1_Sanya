@@ -1,0 +1,32 @@
+#include <iostream>
+#include <atomic>
+#include <exception>
+#include <stdexcept>
+
+class MyClass {
+
+public:
+    static std::atomic_bool flag;
+public:
+    MyClass()
+    {
+        if (!(flag.exchange(false))) throw std::logic_error( "one object has been created" );
+    }
+};
+
+std::atomic_bool MyClass::flag(true);
+
+int main()
+{
+    MyClass x;
+    try
+    {
+        MyClass y;
+        throw std::logic_error( "one object has already been created" );
+    }
+    catch (const std::logic_error)
+    {
+        std::cout << "error! only 1 object can be created!";
+    }
+    return 0;
+}
